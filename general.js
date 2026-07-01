@@ -19,42 +19,54 @@ public_users.post("/register", (req,res) => {
   return res.status(404).json({message: "Unable to register user."});
 });
 
-// Get the book list available in the shop
-public_users.get('/',function (req, res) {
-  res.send(JSON.stringify(books,null,4));
+// Task 10: Get book list using Promise
+public_users.get('/', function (req, res) {
+  const get_books = new Promise((resolve, reject) => {
+      resolve(res.send(JSON.stringify({books}, null, 4)));
+  });
+  get_books.then(() => console.log("Promise for Task 10 resolved"));
 });
 
-// Get book details based on ISBN
-public_users.get('/isbn/:isbn',function (req, res) {
-  const isbn = req.params.isbn;
-  res.send(books[isbn]);
- });
-  
-// Get book details based on author
-public_users.get('/author/:author',function (req, res) {
-  const author = req.params.author;
-  let output = {};
-  for (let isbn in books) {
-    if (books[isbn].author === author) {
-      output[isbn] = { "title": books[isbn].title, "reviews": books[isbn].reviews };
-    }
-  }
-  res.send(output);
+// Task 11: Get book details based on ISBN using Promise
+public_users.get('/isbn/:isbn', function (req, res) {
+  const get_book = new Promise((resolve, reject) => {
+      const isbn = req.params.isbn;
+      resolve(res.send(books[isbn]));
+  });
+  get_book.then(() => console.log("Promise for Task 11 resolved"));
 });
 
-// Get all books based on title
-public_users.get('/title/:title',function (req, res) {
-  const title = req.params.title;
-  let output = {};
-  for (let isbn in books) {
-    if (books[isbn].title === title) {
-      output[isbn] = { "author": books[isbn].author, "reviews": books[isbn].reviews };
-    }
-  }
-  res.send(output);
+// Task 12: Get book details based on author using Promise
+public_users.get('/author/:author', function (req, res) {
+  const get_books_author = new Promise((resolve, reject) => {
+      let booksbyauthor = [];
+      let isbns = Object.keys(books);
+      isbns.forEach((isbn) => {
+          if(books[isbn].author === req.params.author) {
+              booksbyauthor.push({"isbn":isbn, "title":books[isbn].title, "reviews":books[isbn].reviews});
+          }
+      });
+      resolve(res.send(JSON.stringify({booksbyauthor}, null, 4)));
+  });
+  get_books_author.then(() => console.log("Promise for Task 12 resolved"));
 });
 
-//  Get book review
+// Task 13: Get all books based on title using Promise
+public_users.get('/title/:title', function (req, res) {
+  const get_books_title = new Promise((resolve, reject) => {
+      let booksbytitle = [];
+      let isbns = Object.keys(books);
+      isbns.forEach((isbn) => {
+          if(books[isbn].title === req.params.title) {
+              booksbytitle.push({"isbn":isbn, "author":books[isbn].author, "reviews":books[isbn].reviews});
+          }
+      });
+      resolve(res.send(JSON.stringify({booksbytitle}, null, 4)));
+  });
+  get_books_title.then(() => console.log("Promise for Task 13 resolved"));
+});
+
+// Get book review
 public_users.get('/review/:isbn',function (req, res) {
   const isbn = req.params.isbn;
   res.send(books[isbn].reviews);
