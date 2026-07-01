@@ -22,7 +22,7 @@ public_users.post("/register", (req,res) => {
 // Task 10: Get book list using Promise
 public_users.get('/', function (req, res) {
   const get_books = new Promise((resolve, reject) => {
-      resolve(res.send(JSON.stringify({books}, null, 4)));
+      resolve(res.send(JSON.stringify(books, null, 4)));
   });
   get_books.then(() => console.log("Promise for Task 10 resolved"));
 });
@@ -66,7 +66,6 @@ public_users.get('/title/:title', function (req, res) {
   get_books_title.then(() => console.log("Promise for Task 13 resolved"));
 });
 
-// Get book review
 public_users.get('/review/:isbn',function (req, res) {
   const isbn = req.params.isbn;
   res.send(books[isbn].reviews);
